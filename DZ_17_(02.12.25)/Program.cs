@@ -5,7 +5,7 @@ using System.Text;
 
 // 1️ - ПІБ
 class Person
-{
+{ 
     public string? FirstName { get; set; }
     public string? Surname { get; set; }
     public string? Lastname { get; set; }
@@ -22,51 +22,43 @@ class Address
     public short PostalCode { get; set; }
 }
 
-// 3️ - Дата нарождения
-class BirthInfo
+// 3 - Спеціалізація (окремий клас)
+class Specialization
 {
-    public DateTime BirthDate { get; set; }
+    public string? Name { get; set; }
 }
 
-// 4️ - Інформація про період навчання
-class StudyPeriod
-{
-    public DateTime StartDate { get; set; }
-}
-
-// 5 - Інформація про курс
+// 4 - Курс
 class KursInfo
 {
     public int Kurs { get; set; }
-    public string? Specialization { get; set; }
 }
 
-// 6 - Інформація про групу
+// 5 - Група (окремо)
 class GroupInfo
 {
     public string? GroupName { get; set; }
-    public int StudentsCount { get; set; }
 }
 
-// 7 - Відвідуваність
+// 6 - Відвідуваність
 class Attendance
 {
     public int LessonsVisited { get; set; }
     public int LessonsLate { get; set; }
 }
 
-// 8 - Предмет
+// 7 - Предмет
 class Subject
 {
     public string? SubjectName { get; set; }
 }
 
-// 9 - Викладач
+// 8 - Викладач
 class Teacher : Person
 {
 }
 
-// 10 - Оцінки
+// 9 - Оцінки
 class Grades
 {
     public List<int> DzRates { get; set; } = new List<int>();
@@ -74,13 +66,12 @@ class Grades
     public List<int> ExamRates { get; set; } = new List<int>();
     public List<int> ZachetRates { get; set; } = new List<int>();
 
-    // Метод для виводу оцінок та їх середніх значень
     public void PrintAverages()
     {
-        double dzAvg = DzRates.Count > 0 && DzRates.Count <= 12 ? DzRates.Average() : 0;
-        double practiceAvg = PracticeRates.Count > 0 && PracticeRates.Count <= 12 ? PracticeRates.Average() : 0;
-        double examAvg = ExamRates.Count > 0 && ExamRates.Count <= 12 ? ExamRates.Average() : 0;
-        double zachetAvg = ZachetRates.Count > 0 && ZachetRates.Count <= 12 ? ZachetRates.Average() : 0;
+        double dzAvg = DzRates.Any() ? DzRates.Average() : 0;
+        double practiceAvg = PracticeRates.Any() ? PracticeRates.Average() : 0;
+        double examAvg = ExamRates.Any() ? ExamRates.Average() : 0;
+        double zachetAvg = ZachetRates.Any() ? ZachetRates.Average() : 0;
 
         double totalAverage = (dzAvg + practiceAvg + examAvg + zachetAvg) / 4;
 
@@ -96,29 +87,31 @@ class Grades
 //-----------------------------------------------
 class Student
 {
-    public Person Name { get; set; }
-    public Address Address { get; set; }
-    public BirthInfo Birth { get; set; }
-    public StudyPeriod StudyPeriod { get; set; }
-    public KursInfo KursInfo { get; set; }
-    public GroupInfo GroupInfo { get; set; }
-    public Attendance Attendance { get; set; }
-    public Subject Subject { get; set; }
-    public Teacher Teacher { get; set; }
-    public Grades Grades { get; set; }
+    public Person Name { get; set; } = new Person();
+    public Address Address { get; set; } = new Address();
+
+    public DateTime BirthDate { get; set; } = new DateTime();
+    public DateTime StudyStartDate { get; set; } = new DateTime();
+
+    public KursInfo KursInfo { get; set; } = new KursInfo();
+    public Specialization Specialization { get; set; } = new Specialization();
+    public GroupInfo GroupInfo { get; set; } = new GroupInfo();
+    public Attendance Attendance { get; set; } = new Attendance();
+    public Subject Subject { get; set; } = new Subject();
+    public Teacher Teacher { get; set; } = new Teacher();
+    public Grades Grades { get; set; } = new Grades();
 
     public Student()
     {
-        Name = new Person();
+        /*Name = new Person();
         Address = new Address();
-        Birth = new BirthInfo();
-        StudyPeriod = new StudyPeriod();
         KursInfo = new KursInfo();
+        Specialization = new Specialization();
         GroupInfo = new GroupInfo();
         Attendance = new Attendance();
         Subject = new Subject();
         Teacher = new Teacher();
-        Grades = new Grades();
+        Grades = new Grades();*/
     }
 
     public void PrintInfo()
@@ -139,30 +132,30 @@ class Student
         Console.WriteLine($"  Поштовий індекс: {Address.PostalCode}\n");
 
         Console.WriteLine("— Дата народження:");
-        Console.WriteLine($"  {Birth.BirthDate:dd.MM.yyyy}\n");
+        Console.WriteLine($"  {BirthDate:dd.MM.yyyy}\n");
 
-        Console.WriteLine("— Інформація про період навчання:");
-        Console.WriteLine($"  Дата початку навчання: {StudyPeriod.StartDate:dd.MM.yyyy}\n");
+        Console.WriteLine("— Період навчання:");
+        Console.WriteLine($"  Дата початку навчання: {StudyStartDate:dd.MM.yyyy}\n");
 
-        Console.WriteLine("— Інформація про курс");
+        Console.WriteLine("— Курс:");
         Console.WriteLine($"  Курс: {KursInfo.Kurs}");
-        Console.WriteLine($"  Спеціалізація: {KursInfo.Specialization}");
 
-        Console.WriteLine("— Інформація про групу:");
-        Console.WriteLine($"  Група: {GroupInfo.GroupName}");
-        Console.WriteLine($"  Кількість студентів у групі: {GroupInfo.StudentsCount}\n");
+        Console.WriteLine("— Спеціалізація:");
+        Console.WriteLine($"  {Specialization.Name}\n");
+
+        Console.WriteLine("— Група:");
+        Console.WriteLine($"  Група: {GroupInfo.GroupName}\n");
 
         Console.WriteLine("— Відвідуваність:");
         Console.WriteLine($"  Відвідано занять: {Attendance.LessonsVisited}");
         Console.WriteLine($"  Запізнень: {Attendance.LessonsLate}\n");
 
         Console.WriteLine("— Предмет:");
-        Console.WriteLine($"  Предмет: {Subject.SubjectName}\n");
+        Console.WriteLine($"  {Subject.SubjectName}\n");
 
         Console.WriteLine("— Викладач:");
-        Console.WriteLine($"  Викладач: {Teacher.FirstName} {Teacher.Surname} {Teacher.Lastname}\n");
+        Console.WriteLine($"  {Teacher.FirstName} {Teacher.Surname} {Teacher.Lastname}\n");
 
-        
         Grades.PrintAverages();
     }
 }
@@ -175,42 +168,40 @@ class Program
 
         Student student = new Student();
 
-        //---------------------------------------
         student.Name.FirstName = "Іван";
         student.Name.Surname = "Петренко";
         student.Name.Lastname = "Олександрович";
-        //--------------
+
         student.Address.Country = "Україна";
         student.Address.Region = "Київська область";
         student.Address.City = "Київ";
         student.Address.Street = "Хрещатик";
         student.Address.HouseNumber = 10;
         student.Address.PostalCode = 12345;
-        //--------------
-        student.Birth.BirthDate = new DateTime(2002, 6, 15);
-        //--------------
-        student.StudyPeriod.StartDate = new DateTime(2020, 9, 1);
-        //--------------
+
+        student.BirthDate = new DateTime(2002, 6, 15);
+        student.StudyStartDate = new DateTime(2020, 9, 1);
+
         student.KursInfo.Kurs = 2;
-        student.KursInfo.Specialization = "Програмування";
-        //--------------
+
+        student.Specialization.Name = "Програмування";
+
         student.GroupInfo.GroupName = "CS-22";
-        student.GroupInfo.StudentsCount = 28;
-        //--------------
+
         student.Attendance.LessonsVisited = 42;
         student.Attendance.LessonsLate = 3;
-        //--------------
+
         student.Subject.SubjectName = "Алгоритми і Структури Даних";
-        //--------------
+
         student.Teacher.FirstName = "Олег";
         student.Teacher.Surname = "Павленко";
         student.Teacher.Lastname = "Олександрович";
-        //--------------
-        student.Grades.DzRates.AddRange(new int[] { 10, 11, 12 });
-        student.Grades.PracticeRates.AddRange(new int[] { 9, 10, 12 });
-        student.Grades.ExamRates.AddRange(new int[] { 12 });
-        student.Grades.ZachetRates.AddRange(new int[] { 10, 10, 11 });
-        //-------------------
+
+        student.Grades.DzRates.AddRange(new[] { 10, 11, 12 });
+        student.Grades.PracticeRates.AddRange(new[] { 9, 10, 12 });
+        student.Grades.ExamRates.AddRange(new[] { 12 });
+        student.Grades.ZachetRates.AddRange(new[] { 10, 10, 11 });
+
         student.PrintInfo();
     }
 }
